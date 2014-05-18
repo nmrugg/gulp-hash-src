@@ -38,9 +38,21 @@ function match_all(regex, str)
     return res;
 }
 
-function clean_link(link)
+function clean_link(link, base)
 {
-    return decodeURI(String(link));
+    link = decodeURI(String(link));
+    
+    /// Is it relative
+    if (link[0] !== "/" && base && !is_abs_link(link)) {
+        link = p.join(base, link)
+    }
+    
+    return link;
+}
+
+function is_abs_link(link)
+{
+    return /^mailto:|^(?:https?:)?\/\//i.test(link);
 }
 
 module.exports = function hash_src(options)
@@ -61,7 +73,7 @@ module.exports = function hash_src(options)
         options.exts = [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".ico"];
     }
     
-    function get_hashes(data, cb)
+    function get_hashes(data, base, cb)
     {
         var matches = match_all(find_regex, data);
         
@@ -71,10 +83,10 @@ module.exports = function hash_src(options)
         
         girdle.async_loop(matches, cb, function oneach(match, next)
         {
-            var link = clean_link(match[3] || match[5] || match[6]),
+            var link = clean_link(match[3] || match[5] || match[6], base),
                 full_path;
             
-            if (hashes[link] || options.exts.indexOf(p.extname(link).toLowerCase()) === -1) {
+            if (hashes[link] || options.exts.indexOf(p.extname(link).toLowerCase()) === -1 || is_abs_link(link)) {
                 return next();
             }
             
@@ -100,11 +112,11 @@ module.exports = function hash_src(options)
         });
     }
     
-    function rewrite(data)
+    function rewrite(data, base)
     {
         return data.replace(find_regex_g, function add_hash()
         {
-            var link = clean_link(arguments[3] || arguments[5] || arguments[6]),
+            var link = clean_link(arguments[3] || arguments[5] || arguments[6], base),
                 quote = arguments[2] || arguments[4] || "";
             
             //console.log(link)
@@ -121,12 +133,14 @@ module.exports = function hash_src(options)
     
     function hash_it(file, encoding, callback)
     {
-        var data = file.contents.toString();
+        var data = file.contents.toString(),
+            base = p.relative(options.src_path, p.dirname(file.path));
         /// file.contents = new Buffer(htmlmin.minify(String(file.contents), opts));
         //console.log(file.contents.toString());process.exit();
-        get_hashes(data, function onhash(err)
+        get_hashes(data, base, function onhash(err)
         {
-            file.contents = new Buffer(rewrite(data));
+            console.log(hashes)
+            file.contents = new Buffer(rewrite(data, base));
             callback(null, file);
         });
         ///file.contents = new Buffer(rewrite(file.contents.toString()));
