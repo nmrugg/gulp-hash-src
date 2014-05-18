@@ -116,14 +116,16 @@ module.exports = function hash_src(options)
     {
         return data.replace(find_regex_g, function add_hash()
         {
-            var link = clean_link(arguments[3] || arguments[5] || arguments[6], base),
+            var orig_link = arguments[3] || arguments[5] || arguments[6],
+                link,
                 quote = arguments[2] || arguments[4] || "";
             
+            link = clean_link(orig_link, base)
             //console.log(link)
             //console.log(link, quote)
             //process.exit();
             if (hashes[link]) {
-                return arguments[1] + "=" + quote + encodeURI(link) + "?" + hashes[link] + quote
+                return arguments[1] + "=" + quote + orig_link + "?cbh=" + hashes[link] + quote
             } else {
                 return arguments[0];
             }
@@ -139,7 +141,6 @@ module.exports = function hash_src(options)
         //console.log(file.contents.toString());process.exit();
         get_hashes(data, base, function onhash(err)
         {
-            console.log(hashes)
             file.contents = new Buffer(rewrite(data, base));
             callback(null, file);
         });
