@@ -6,7 +6,6 @@ var through = require("through2"),
     fs_helper = require("fs_helper"),
     girdle = require("girdle"),
     p = require("path"),
-    url = require("url"),
     
     //find_regex = /(src|href)\s*=([^>]+)/i,
     //find_regex = /(?:href|src)\s*=\s*(?:(["'])((?:\\\1|.)*)?\1|([^'"\s>]*))/i;
@@ -41,7 +40,7 @@ function match_all(regex, str)
 
 function clean_link(link)
 {
-    return url.parse(decodeURI(String(link))).pathname;
+    return decodeURI(String(link));
 }
 
 module.exports = function hash_src(options)
@@ -59,7 +58,7 @@ module.exports = function hash_src(options)
         options.enc = "hex";
     }
     if (!options.exts) {
-        options.exts = [".js", ".css"];
+        options.exts = [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".ico"];
     }
     
     function get_hashes(data, cb)
