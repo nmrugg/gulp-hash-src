@@ -1,0 +1,20 @@
+{
+  "name": "gulp-hash-src",
+  "description": "Add hashes to files in HTML",
+  "version": "0.0.1",
+  "author": {
+    "name": "Nathan Rugg",
+    "email": "nmrugg@gmail.com"
+  },
+  "dependencies": {
+    "through2": "~0.4.1"
+  },
+  "engines": {
+    "node": ">= 0.9"
+  },
+  "keywords": [
+    "gulpplugin"
+  ],
+  "license": "MIT",
+  "main": "index.js"
+}
