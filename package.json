@@ -1,13 +1,14 @@
 {
   "name": "gulp-hash-src",
-  "description": "Add hashes to files in HTML",
+  "description": "Add hashes to links to files in HTML/CSS",
   "version": "0.0.1",
   "author": {
     "name": "Nathan Rugg",
     "email": "nmrugg@gmail.com"
   },
   "dependencies": {
-    "through2": "~0.4.1"
+    "through2": "~0.4.1",
+    "fs_helper": "~0.1.4"
   },
   "engines": {
     "node": ">= 0.9"

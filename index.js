@@ -10,7 +10,7 @@ var through = require("through2"),
     //find_regex = /(src|href)\s*=([^>]+)/i,
     //find_regex = /(?:href|src)\s*=\s*(?:(["'])((?:\\\1|.)*)?\1|([^'"\s>]*))/i;
     //find_regex = /(?:href|src)\s*=\s*(["'])((?:\\\1|.)*)?\1/i;
-    find_regex = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))/ig;
+    find_regex = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))|url\s*\((?:(")([^"]+)|(')([^']+)|([^'"\)]+))/ig;
     //find_regex_g = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))/ig;
     //find_regex_g;
     //quotes_regex = /(?:^['"]|['"]$)/g;
@@ -50,16 +50,27 @@ function clean_link(link, base)
 
 function is_abs_link(link)
 {
-    return /^mailto:|^(?:https?:)?\/\//i.test(link);
+    return /^(?:mailto|data):|^(?:https?:)?\/\//i.test(link);
 }
 
 function analyze(match)
 {
-    var quote = match[2] || match[4] || "";
+    var quote = match[2] || match[4] || match[7] || match[9] || "",
+        link = match[3] || match[5] || match[6];
     
+    /// Is this a href/src match?
+    if (link) {
+        return {
+            prefix: match[1] + "=" + quote,
+            link: link,
+            suffix: "", /// The last quote doesn't get matched
+        };
+    }
+    
+    /// It is a CSS match.
     return {
-        prefix: match[1] + "=" + quote,
-        link: match[3] || match[5] || match[6],
+        prefix: "url(" + quote,
+        link: match[8] || match[10] || match[11],
         suffix: "", /// The last quote doesn't get matched
     };
 }
@@ -79,7 +90,7 @@ module.exports = function hash_src(options)
         options.enc = "hex";
     }
     if (!options.exts) {
-        options.exts = [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".ico"];
+        options.exts = [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".ico", ".ttf", ".woff"];
     }
     if (!options.regex || !options.analyze) {
         options.regex = find_regex;
