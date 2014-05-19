@@ -7,13 +7,7 @@ var through = require("through2"),
     girdle = require("girdle"),
     p = require("path"),
     
-    //find_regex = /(src|href)\s*=([^>]+)/i,
-    //find_regex = /(?:href|src)\s*=\s*(?:(["'])((?:\\\1|.)*)?\1|([^'"\s>]*))/i;
-    //find_regex = /(?:href|src)\s*=\s*(["'])((?:\\\1|.)*)?\1/i;
     find_regex = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))|url\s*\((?:(")([^"]+)|(')([^']+)|([^'"\)]+))/ig;
-    //find_regex_g = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))/ig;
-    //find_regex_g;
-    //quotes_regex = /(?:^['"]|['"]$)/g;
 
 function match_all(regex, str)
 {
@@ -56,7 +50,7 @@ function is_abs_link(link)
 function analyze(match)
 {
     var quote = match[2] || match[4] || match[7] || match[9] || "",
-        link = match[3] || match[5] || match[6];
+        link  = match[3] || match[5] || match[6];
     
     /// Is this a href/src match?
     if (link) {
@@ -110,7 +104,6 @@ module.exports = function hash_src(options)
         
         girdle.async_loop(matches, cb, function oneach(match, next)
         {
-            //var link = clean_link(match[3] || match[5] || match[6], base),
             var link = clean_link(options.analyze(match).link, base),
                 full_path;
             
@@ -144,21 +137,12 @@ module.exports = function hash_src(options)
     {
         return data.replace(options.regex, function add_hash()
         {
-            //var link = clean_link(options.analyze(match).link, base),
-            /*
-            var orig_link = arguments[3] || arguments[5] || arguments[6],
-                link,
-                quote = arguments[2] || arguments[4] || "";
-            */
             var props = options.analyze(arguments),
                 link;
             
-            link = clean_link(props.link, base)
-            //console.log(link)
-            //console.log(link, quote)
-            //process.exit();
+            link = clean_link(props.link, base);
+            
             if (hashes[link]) {
-                //return arguments[1] + "=" + quote + orig_link + "?cbh=" + hashes[link] + quote
                 return props.prefix + props.link + "?" + (options.query_name ? options.query_name + "=" : "") + hashes[link] + props.suffix;
             } else {
                 return arguments[0];
@@ -171,26 +155,13 @@ module.exports = function hash_src(options)
     {
         var data = file.contents.toString(),
             base = p.relative(options.src_path, p.dirname(file.path));
-        /// file.contents = new Buffer(htmlmin.minify(String(file.contents), opts));
-        //console.log(file.contents.toString());process.exit();
+        
         get_hashes(data, base, function onhash(err)
         {
             file.contents = new Buffer(rewrite(data, base));
             callback(null, file);
         });
-        ///file.contents = new Buffer(rewrite(file.contents.toString()));
-        /*
-        for (key in file) {
-            console.log(key, file[key])
-        }
-        process.exit();
-        console.log(file.path);
-        console.log(encoding);
-        console.log(callback);
-        callback(null, file);
-        */
-        
-        }
+    }
     
     return through.obj(hash_it);
 };
