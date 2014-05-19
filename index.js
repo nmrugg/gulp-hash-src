@@ -10,12 +10,10 @@ var through = require("through2"),
     //find_regex = /(src|href)\s*=([^>]+)/i,
     //find_regex = /(?:href|src)\s*=\s*(?:(["'])((?:\\\1|.)*)?\1|([^'"\s>]*))/i;
     //find_regex = /(?:href|src)\s*=\s*(["'])((?:\\\1|.)*)?\1/i;
-    find_regex = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))/i,
+    find_regex = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))/ig;
     //find_regex_g = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))/ig;
-    find_regex_g;
+    //find_regex_g;
     //quotes_regex = /(?:^['"]|['"]$)/g;
-
-find_regex_g = new RegExp(find_regex.source, "ig");
 
 function match_all(regex, str)
 {
@@ -23,10 +21,10 @@ function match_all(regex, str)
         pos = 0,
         res = [];
     
-    /// If it has the global flag, it cannot return the elements in the parenthases, so just run the regex and exit.
-    ///TODO: Get regex source and recreate it.
+    /// If it has the global flag, it cannot return the elements in the parenthases, so we need to recreate it without it.
     if (regex.global) {
-        return str.match(regex);
+        /// We can get the flags at the end with toString() and then get rid of the "g".
+        regex = new RegExp(regex.source, regex.toString().match(/\/([^\/]+)$/)[1].replace("g", ""));
     }
     
     /// Make sure to get all of the matching parenthases.
@@ -55,6 +53,17 @@ function is_abs_link(link)
     return /^mailto:|^(?:https?:)?\/\//i.test(link);
 }
 
+function analyze(match)
+{
+    var quote = match[2] || match[4] || "";
+    
+    return {
+        prefix: match[1] + "=" + quote,
+        link: match[3] || match[5] || match[6],
+        suffix: "", /// The last quote doesn't get matched
+    };
+}
+
 module.exports = function hash_src(options)
 {
     var hashes = {};
@@ -72,10 +81,14 @@ module.exports = function hash_src(options)
     if (!options.exts) {
         options.exts = [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".ico"];
     }
+    if (!options.regex || !options.analyze) {
+        options.regex = find_regex;
+        options.analyze = analyze;
+    }
     
     function get_hashes(data, base, cb)
     {
-        var matches = match_all(find_regex, data);
+        var matches = match_all(options.regex, data);
         
         if (!matches) {
             return setImmediate(cb);
@@ -83,7 +96,8 @@ module.exports = function hash_src(options)
         
         girdle.async_loop(matches, cb, function oneach(match, next)
         {
-            var link = clean_link(match[3] || match[5] || match[6], base),
+            //var link = clean_link(match[3] || match[5] || match[6], base),
+            var link = clean_link(options.analyze(match).link, base),
                 full_path;
             
             if (hashes[link] || options.exts.indexOf(p.extname(link).toLowerCase()) === -1 || is_abs_link(link)) {
@@ -114,18 +128,24 @@ module.exports = function hash_src(options)
     
     function rewrite(data, base)
     {
-        return data.replace(find_regex_g, function add_hash()
+        return data.replace(options.regex, function add_hash()
         {
+            //var link = clean_link(options.analyze(match).link, base),
+            /*
             var orig_link = arguments[3] || arguments[5] || arguments[6],
                 link,
                 quote = arguments[2] || arguments[4] || "";
+            */
+            var props = options.analyze(arguments),
+                link;
             
-            link = clean_link(orig_link, base)
+            link = clean_link(props.link, base)
             //console.log(link)
             //console.log(link, quote)
             //process.exit();
             if (hashes[link]) {
-                return arguments[1] + "=" + quote + orig_link + "?cbh=" + hashes[link] + quote
+                //return arguments[1] + "=" + quote + orig_link + "?cbh=" + hashes[link] + quote
+                return props.prefix + props.link + "?cbh=" + hashes[link] + props.suffix;
             } else {
                 return arguments[0];
             }
