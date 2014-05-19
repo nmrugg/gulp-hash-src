@@ -96,6 +96,9 @@ module.exports = function hash_src(options)
         options.regex = find_regex;
         options.analyze = analyze;
     }
+    if (typeof options.query_name === "undefined") {
+        options.query_name = "cbh"; /// "cache busting hash"
+    }
     
     function get_hashes(data, base, cb)
     {
@@ -156,7 +159,7 @@ module.exports = function hash_src(options)
             //process.exit();
             if (hashes[link]) {
                 //return arguments[1] + "=" + quote + orig_link + "?cbh=" + hashes[link] + quote
-                return props.prefix + props.link + "?cbh=" + hashes[link] + props.suffix;
+                return props.prefix + props.link + "?" + (options.query_name ? options.query_name + "=" : "") + hashes[link] + props.suffix;
             } else {
                 return arguments[0];
             }
