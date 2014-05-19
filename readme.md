@@ -63,7 +63,7 @@ hash        The type of hash (default: "md5")
 
 enc         Encoding (default: "hex")
 
-exts        The types of files to hash
+exts        An array of the types of files to hash
             (default: [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".ico", ".ttf", ".woff"])
 
 regex       The regular expression to find links
