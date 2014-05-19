@@ -1,6 +1,6 @@
 {
   "name": "gulp-hash-src",
-  "description": "Add hashes to links to files in HTML/CSS",
+  "description": "Add hashes to links in HTML/CSS",
   "version": "0.0.1",
   "author": {
     "name": "Nathan Rugg",
