@@ -50,7 +50,7 @@ into
 html {
     background: url(image.jpg?cbh=0123456789abcdef);
 }
-
+```
 
 ## Options
 
