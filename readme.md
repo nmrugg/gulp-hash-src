@@ -82,3 +82,6 @@ query_name  The query string to add to the hash (default: "cbh")
             To remove the string entirely, give a blank string and get
             href="file.css?0123456789abcdef"
 ```
+
+## License
+<a href="http://nate.mit-license.org">MIT</a>

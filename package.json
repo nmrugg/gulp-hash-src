@@ -18,5 +18,6 @@
     "gulpplugin"
   ],
   "license": "MIT",
-  "main": "index.js"
+  "main": "index.js",
+  "readmeFilename": "readme.md"
 }
