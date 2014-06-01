@@ -15,6 +15,6 @@
     "gulpplugin"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "hash-src.js",
   "readmeFilename": "readme.md"
 }
