@@ -1,7 +1,5 @@
 # gulp-hash-src
 
-<strong>DANGER: This is a 0.0.x release.</strong>
-
 Automatically add cache busting hashes to links in HTML and CSS.
 
 ## Usage
@@ -61,23 +59,25 @@ src_path    Where the files originated from (required)
 
 hash        The type of hash (default: "md5")
 
-hash_len    The length of a string to extract from hash
+hash_len    The length of the hash (default: null)
+            If hash_len is falsey, the entire hash is used.
 
-enc         Encoding (default: "hex")
+enc         Hash encoding (default: "hex")
 
 exts        An array of the types of files to hash
-            (default: [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".ico", ".ttf", ".woff"])
+            (default: [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".pdf", ".ico", ".ttf", ".woff", ".mp3", ".ogg", ".ogv", ".mp4", ".webm", ".zip", ".tar", ".gz", ".bz2"])
 
 regex       The regular expression to find links
             (by default it looks for something like src="..." href="..." url(...)
 
 analyze     The function to use to analyze the regular expression matches
-            Must return an object like so
+            The function will receive an array of the matches from the regex.
+            Must return an object like so:
             {
                 prefix: "href=",
                 link:   "/file.js",
-                suffix: ""
-                abs: false
+                suffix: "",
+                abs: false (optional)
             }
 
 query_name  The query string to add to the hash (default: "cbh")
