@@ -130,7 +130,7 @@ module.exports = function hash_src(options)
                     fs_helper.hash(full_path, options.hash, options.enc, function onhash(hash)
                     {
                         if (options.hash_len) {
-                            hash = hash.substring(hash, options.hash_len);
+                            hash = hash.substr(0, options.hash_len);
                         }
                         hashes[link] = hash;
                         next();
