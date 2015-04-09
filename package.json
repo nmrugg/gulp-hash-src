@@ -1,7 +1,7 @@
 {
   "name": "gulp-hash-src",
   "description": "Add hashes to links in HTML/CSS",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Nathan Rugg",
     "email": "nmrugg@gmail.com"
@@ -14,6 +14,10 @@
   "keywords": [
     "gulpplugin"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nmrugg/gulp-hash-src"
+  },
   "license": "MIT",
   "main": "hash-src.js",
   "readmeFilename": "readme.md"
