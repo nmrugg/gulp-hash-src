@@ -5,8 +5,7 @@
 var through = require("through2"),
     fs_helper = require("fs_helper"),
     girdle = require("girdle"),
-    p = require("path"),
-    
+    p,
     find_regex = /(href|src)\s*=\s*(?:(")([^"]*)|(')([^']*)|([^'"\s>]+))|url\s*\((?:(")([^"]+)|(')([^']+)|([^'"\)]+))/ig;
 
 function match_all(regex, str)
@@ -35,8 +34,8 @@ function clean_link(link, base)
     link = decodeURI(String(link));
     
     /// Is it relative
-    if (link[0] !== "/" && base && !is_abs_link(link)) {
-        link = p.join(base, link)
+    if (base && link[0] !== "/" && !is_abs_link(link)) {
+        link = p.join(base, link);
     }
     
     return link;
@@ -68,6 +67,8 @@ function analyze(match)
         suffix: "", /// The last quote doesn't get matched
     };
 }
+
+p = fs_helper.p;
 
 module.exports = function hash_src(options)
 {
@@ -126,8 +127,9 @@ module.exports = function hash_src(options)
                     }
                     fs_helper.hash(full_path, options.hash, options.enc, function onhash(hash)
                     {
-                    	if (options.hash_len)
-                    		hash = hash.substring(hash, options.hash_len);
+                        if (options.hash_len) {
+                            hash = hash.substring(hash, options.hash_len);
+                        }
                         hashes[link] = hash;
                         next();
                     });
@@ -153,13 +155,12 @@ module.exports = function hash_src(options)
         });
     }
     
-    
     function hash_it(file, encoding, callback)
     {
         var data = file.contents.toString(),
             base = p.relative(options.src_path, p.dirname(file.path));
         
-        get_hashes(data, base, function onhash(err)
+        get_hashes(data, base, function onhash()
         {
             file.contents = new Buffer(rewrite(data, base));
             callback(null, file);
