@@ -143,7 +143,7 @@ module.exports = function hash_src(options)
             var props = options.analyze(arguments),
                 link;
             
-            link = clean_link(props.link, , props.abs ? null : base);
+            link = clean_link(props.link, props.abs ? null : base);
             
             if (hashes[link]) {
                 return props.prefix + props.link + "?" + (options.query_name ? options.query_name + "=" : "") + hashes[link] + props.suffix;
