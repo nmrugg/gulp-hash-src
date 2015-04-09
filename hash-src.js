@@ -87,8 +87,10 @@ module.exports = function hash_src(options)
     if (!options.exts) {
         options.exts = [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".pdf", ".ico", ".ttf", ".woff", ".mp3", ".ogg", ".ogv", ".mp4", ".webm"];
     }
-    if (!options.regex || !options.analyze) {
+    if (!options.regex) {
         options.regex = find_regex;
+    }
+    if (!options.analyze) {
         options.analyze = analyze;
     }
     if (typeof options.query_name === "undefined") {
