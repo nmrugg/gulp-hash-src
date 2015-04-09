@@ -104,7 +104,8 @@ module.exports = function hash_src(options)
         
         girdle.async_loop(matches, cb, function oneach(match, next)
         {
-            var link = clean_link(options.analyze(match).link, base),
+            var props = options.analyze(match);
+            var link = clean_link(props.link, props.abs ? null : base),
                 full_path;
             
             if (hashes[link] || options.exts.indexOf(p.extname(link).toLowerCase()) === -1 || is_abs_link(link)) {
@@ -125,6 +126,8 @@ module.exports = function hash_src(options)
                     }
                     fs_helper.hash(full_path, options.hash, options.enc, function onhash(hash)
                     {
+                    	if (options.hash_len)
+                    		hash = hash.substring(hash, options.hash_len);
                         hashes[link] = hash;
                         next();
                     });
@@ -140,7 +143,7 @@ module.exports = function hash_src(options)
             var props = options.analyze(arguments),
                 link;
             
-            link = clean_link(props.link, base);
+            link = clean_link(props.link, props.abs ? null : base);
             
             if (hashes[link]) {
                 return props.prefix + props.link + "?" + (options.query_name ? options.query_name + "=" : "") + hashes[link] + props.suffix;

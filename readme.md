@@ -61,6 +61,8 @@ src_path    Where the files originated from (required)
 
 hash        The type of hash (default: "md5")
 
+hash_len    The length of a string to extract from hash
+
 enc         Encoding (default: "hex")
 
 exts        An array of the types of files to hash
@@ -75,6 +77,7 @@ analyze     The function to use to analyze the regular expression matches
                 prefix: "href=",
                 link:   "/file.js",
                 suffix: ""
+                abs: false
             }
 
 query_name  The query string to add to the hash (default: "cbh")
