@@ -7,9 +7,9 @@
     "email": "nmrugg@gmail.com"
   },
   "dependencies": {
-    "through2": "^0.4.2",
-    "fs_helper": "^0.1.9",
-    "girdle": "^0.1.12"
+    "through2": "=0.4.2",
+    "fs_helper": "=0.1.11",
+    "girdle": "=0.2.2"
   },
   "keywords": [
     "gulpplugin"
