@@ -120,11 +120,17 @@ module.exports = function hash_src(options)
             fs_helper.fs.exists(full_path, function onres(exists)
             {
                 if (!exists) {
+                    if (options.verbose) {
+                        console.log("[gulp-hash-src] \"" + full_path + "\" does not exist. Cannot hash.");
+                    }
                     return next();
                 }
                 fs_helper.is_dir(full_path, function onres(err, is_dir)
                 {
                     if (is_dir) {
+                        if (options.verbose) {
+                            console.log("[gulp-hash-src] \"" + full_path + "\" is a directory. Cannot hash.");
+                        }
                         return next();
                     }
                     fs_helper.hash(full_path, options.hash, options.enc, function onhash(hash)

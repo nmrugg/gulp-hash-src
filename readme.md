@@ -84,6 +84,8 @@ query_name  The query string to add to the hash (default: "cbh")
             Turns links into href="file.css?cbh=0123456789abcdef"
             To remove the string entirely, give a blank string and get
             href="file.css?0123456789abcdef"
+
+verbose     Whether or not to log info about missing files (default: false)
 ```
 
 ## License
