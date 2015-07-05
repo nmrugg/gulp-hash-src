@@ -50,6 +50,10 @@ html {
 }
 ```
 
+## Note
+
+The files that are to be hash must be located in `build_dir` prior to running hash_src().
+
 ## Options
 
 ```
@@ -86,6 +90,7 @@ query_name  The query string to add to the hash (default: "cbh")
             href="file.css?0123456789abcdef"
 
 verbose     Whether or not to log info about missing files (default: false)
+            Useful for debugging.
 ```
 
 ## License
