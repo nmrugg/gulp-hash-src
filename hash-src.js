@@ -75,7 +75,7 @@ module.exports = function hash_src(options)
     var hashes = {};
     
     if (!options || !options.build_dir) {
-        throw "Need build_dir";
+        throw new Error("Need build_dir");
     }
     
     if (!options.hash) {
