@@ -52,7 +52,7 @@ html {
 
 ## Note
 
-The files that are to be hash must be located in `build_dir` prior to running hash_src().
+The files that are to be hash must be located in `build_dir` prior to running `hash_src()`.
 
 ## Options
 
