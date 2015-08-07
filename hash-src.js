@@ -68,6 +68,11 @@ function analyze(match)
     };
 }
 
+function destination_path(build_dir, link)
+{
+  return p.join(build_dir, link);
+}
+
 p = fs_helper.p;
 
 module.exports = function hash_src(options)
@@ -93,6 +98,9 @@ module.exports = function hash_src(options)
     if (!options.analyze) {
         options.analyze = analyze;
     }
+    if (!options.destination_path) {
+        options.destination_path = destination_path;
+    }
     if (typeof options.query_name === "undefined") {
         options.query_name = "cbh"; /// "cache busting hash"
     }
@@ -115,8 +123,8 @@ module.exports = function hash_src(options)
                 return next();
             }
             
-            full_path = p.join(options.build_dir, link);
             
+            full_path = options.destination_path(options.build_dir, link);
             fs_helper.fs.exists(full_path, function onres(exists)
             {
                 if (!exists) {
