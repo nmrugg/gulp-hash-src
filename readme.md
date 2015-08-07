@@ -89,8 +89,8 @@ query_name  The query string to add to the hash (default: "cbh")
             To remove the string entirely, give a blank string and get
             href="file.css?0123456789abcdef"
 
-verbose     Whether or not to log info about missing files (default: false)
-            Useful for debugging.
+verbose     Whether or not to log info about what is happening (default: false)
+            Useful for debugging
 ```
 
 ## License

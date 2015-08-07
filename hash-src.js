@@ -111,6 +111,8 @@ module.exports = function hash_src(options)
             var link = clean_link(props.link, props.abs ? null : base),
                 full_path;
             
+            /// Have we already hashed this file, is the extention not whitelisted, or is it an absolute link (e.g., http://...)?
+            /// If so, we don't need to hash it.
             if (hashes[link] || options.exts.indexOf(p.extname(link).toLowerCase()) === -1 || is_abs_link(link)) {
                 return next();
             }
@@ -121,7 +123,7 @@ module.exports = function hash_src(options)
             {
                 if (!exists) {
                     if (options.verbose) {
-                        console.log("[gulp-hash-src] \"" + full_path + "\" does not exist. Cannot hash.");
+                        console.log("[gulp-hash-src] WARNING: \"" + full_path + "\" does not exist. Cannot hash.");
                     }
                     return next();
                 }
@@ -129,9 +131,12 @@ module.exports = function hash_src(options)
                 {
                     if (is_dir) {
                         if (options.verbose) {
-                            console.log("[gulp-hash-src] \"" + full_path + "\" is a directory. Cannot hash.");
+                            console.log("[gulp-hash-src] WARNING: \"" + full_path + "\" is a directory. Cannot hash.");
                         }
                         return next();
+                    }
+                    if (options.verbose) {
+                        console.log("[gulp-hash-src] Hashing \"" + full_path + "\".");
                     }
                     fs_helper.hash(full_path, options.hash, options.enc, function onhash(hash)
                     {
