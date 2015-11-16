@@ -1,7 +1,7 @@
 {
   "name": "gulp-hash-src",
   "description": "Add hashes to links in HTML/CSS",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": {
     "name": "Nathan Rugg",
     "email": "nmrugg@gmail.com"
