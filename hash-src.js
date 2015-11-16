@@ -31,7 +31,11 @@ function match_all(regex, str)
 
 function clean_link(link, base)
 {
-    link = decodeURI(String(link));
+    try {
+        link = decodeURI(String(link));
+    } catch (err) {
+        // do nothing
+    }
     
     /// Is it relative
     if (base && link[0] !== "/" && !is_abs_link(link)) {
