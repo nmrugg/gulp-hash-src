@@ -106,7 +106,7 @@ module.exports = function hash_src(options)
         options.destination_path = destination_path;
     }
     if (typeof options.query_name === "undefined") {
-        options.query_name = "cbh"; /// "cache busting hash"
+        options.query_name = "v"; // version
     }
     
     function get_hashes(data, base, cb)
@@ -168,12 +168,18 @@ module.exports = function hash_src(options)
         return data.replace(options.regex, function add_hash()
         {
             var props = options.analyze(arguments),
-                link;
+                link, ext;
             
             link = clean_link(props.link, props.abs ? null : base);
             
             if (hashes[link]) {
-                return props.prefix + props.link + "?" + (options.query_name ? options.query_name + "=" : "") + hashes[link] + props.suffix;
+                if (!options.rename) {
+                    return props.prefix + props.link + "?" + (options.query_name ? options.query_name + "=" : "") + hashes[link] + props.suffix; 
+                }
+                else {
+                    ext = p.extname(props.link);
+                    return props.prefix + props.link.replace(ext, '.' + hashes[link] + ext) + props.suffix;
+                }
             } else {
                 return arguments[0];
             }
