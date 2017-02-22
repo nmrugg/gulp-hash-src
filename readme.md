@@ -35,7 +35,7 @@ That will turn something like
 ```
 into
 ```html
-<script src="file.js?cbh=0123456789abcdef">
+<script src="file.js?v=0123456789abcdef">
 ```
 or
 ```css
@@ -46,7 +46,7 @@ html {
 into
 ```css
 html {
-    background: url(image.jpg?cbh=0123456789abcdef);
+    background: url(image.jpg?v=0123456789abcdef);
 }
 ```
 
@@ -71,6 +71,8 @@ enc         Hash encoding (default: "hex")
 exts        An array of the types of files to hash
             (default: [".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".pdf", ".ico", ".ttf", ".woff", ".mp3", ".ogg", ".ogv", ".mp4", ".webm", ".zip", ".tar", ".gz", ".bz2"])
 
+rename      Renames the file rather than appending a querystring (default: false, recommended: true)
+
 regex       The regular expression to find links
             (by default it looks for something like src="..." href="..." url(...)
 
@@ -84,8 +86,8 @@ analyze     The function to use to analyze the regular expression matches
                 abs: false (optional)
             }
 
-query_name  The query string to add to the hash (default: "cbh")
-            Turns links into href="file.css?cbh=0123456789abcdef"
+query_name  The query string to add to the hash (default: "v")
+            Turns links into href="file.css?v=0123456789abcdef"
             To remove the string entirely, give a blank string and get
             href="file.css?0123456789abcdef"
 
